@@ -9,7 +9,7 @@ int read(uint32_t fd,char * buf,int count)
 	struct file * file;
 	struct m_inode * inode;
 
-	if (fd >= MAX_FILES || count < 0 || !(file = &curtask->files->fd[fd]))
+	if (fd >= MAX_FILES || count < 0 || !(file = curtask->files->fd[fd]))
 		return -EINVAL;
 
 	if (!count)
