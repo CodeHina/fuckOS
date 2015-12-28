@@ -96,14 +96,19 @@ void os_entry(void* ginfo,uint32_t gmagic)
 	ide_init();
 
 	mount_root();
+
 	//AP初始化
 	//ap_startup();
-	TASK_CREATE(init, TASK_TYPE_USER);
+	TASK_CREATE(testopen, TASK_TYPE_USER);
 	//TASK_CREATE(forktree, TASK_TYPE_USER);
 	
 	schedule();
 }
 
+void kthread_create()
+{
+
+}
 
 void find_next_cpu_stack()
 {

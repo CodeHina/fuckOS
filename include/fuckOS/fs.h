@@ -4,19 +4,20 @@
 #include <fuckOS/list.h>
 #include <asm/atomic.h>
 
-#define MAX_FILES 	32
+#define MAX_FILES 		32
 
-#define BLOCK_SIZE 	1024
+#define BLOCK_SIZE 		1024
 
-#define NAME_LEN 	30
+#define NAME_LEN 		30
 
-#define SUPER_MAGIC 	0x138F
+#define SUPER_MAGIC 		0x138F
 
-#define I_MAP_SLOTS	8
-#define Z_MAP_SLOTS 	8
-
-#define INODES_PER_BLOCK ((BLOCK_SIZE)/(sizeof (struct d_inode)))
-
+#define I_MAP_SLOTS		8
+#define Z_MAP_SLOTS 		8
+#define ROOT_DEV		0x307
+#define ROOT_INODE		0
+#define INODES_PER_BLOCK 	((BLOCK_SIZE)/(sizeof (struct d_inode)))
+#define DIR_ENTRIES_PER_BLOCK 	((BLOCK_SIZE)/(sizeof (struct dir_entry)))
 struct buffer_head {
 	uint8_t b_data[BLOCK_SIZE];		/* pointer to data block (1024 bytes) */
 	uint32_t b_blocknr;			/* block number */
@@ -97,6 +98,8 @@ struct file {
 
 struct files_struct {
 	struct file *fd[MAX_FILES];
+	struct m_inode *pwd;
+	struct m_inode *root;
 };
 
 struct d_super_block {
@@ -115,7 +118,7 @@ struct dir_entry {
 	int8_t name[NAME_LEN];
 };
 
-extern void mount_root();
+extern struct m_inode *mount_root();
 extern void ide_init();
 extern void buffer_init();
 extern int new_block(int);
@@ -128,4 +131,5 @@ extern struct m_inode * new_inode(int dev);
 extern struct m_inode *inode_get(int dev,int nr);
 extern int bmap(struct m_inode * inode,int block);
 extern int file_read(struct m_inode *, struct file *, char *, int);
+extern int open_namei(const char * , int , int ,struct m_inode **);
 #endif/*_MINIOS_FS_H*/
